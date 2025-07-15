@@ -71,7 +71,7 @@ class DatabaseManager:          # Clase principal para gestionar la conexión y 
         ''')
         self.conn.commit()
     
-    def register_user(self, username, password, user_type):
+    def register_user(self, username, password, user_type):                    #Permite registrar un nuevo usuario
         try:
             hashed = hashlib.sha256(password.encode()).hexdigest()
             cursor = self.conn.cursor()
@@ -82,14 +82,14 @@ class DatabaseManager:          # Clase principal para gestionar la conexión y 
         except sqlite3.IntegrityError:
             return False
     
-    def login_user(self, username, password):
+    def login_user(self, username, password):                              #Permite autenticar un usuario
         hashed = hashlib.sha256(password.encode()).hexdigest()
         cursor = self.conn.cursor()
         cursor.execute('SELECT id, user_type FROM users WHERE username=? AND password=?', 
                       (username, hashed))
         return cursor.fetchone()
 
-    def save_dicom_analysis(self, patient_id, patient_name, dicom_path, nifti_path, user_id):
+    def save_dicom_analysis(self, patient_id, patient_name, dicom_path, nifti_path, user_id):            #Guarda análisis DICOM en la base de datos
         cursor = self.conn.cursor()
         cursor.execute('''
             INSERT INTO dicom_files 
@@ -98,7 +98,7 @@ class DatabaseManager:          # Clase principal para gestionar la conexión y 
         ''', (patient_id, patient_name, dicom_path, nifti_path, user_id))
         self.conn.commit()
 
-    def save_image_analysis(self, file_path, analysis_type, params, result, user_id):
+    def save_image_analysis(self, file_path, analysis_type, params, result, user_id):                  #Guarda análisis de imagen
         cursor = self.conn.cursor()
         cursor.execute('''
             INSERT INTO image_analysis 
@@ -107,7 +107,7 @@ class DatabaseManager:          # Clase principal para gestionar la conexión y 
         ''', (file_path, analysis_type, str(params), str(result), user_id))
         self.conn.commit()
 
-    def save_signal_analysis(self, file_path, signal_type, analysis_type, params, result, user_id):
+    def save_signal_analysis(self, file_path, signal_type, analysis_type, params, result, user_id):                #Guarda análisis de señales
         cursor = self.conn.cursor()
         cursor.execute('''
             INSERT INTO signal_analysis 
@@ -116,8 +116,8 @@ class DatabaseManager:          # Clase principal para gestionar la conexión y 
         ''', (file_path, signal_type, analysis_type, str(params), str(result), user_id))
         self.conn.commit()
 
-class LoginWindow(QMainWindow):
-    def __init__(self, db):
+class LoginWindow(QMainWindow):                                                                        #Ventana principal para iniciar sesión o registrarse
+    def __init__(self, db):                            #Constructor de la clase
         super().__init__()
         self.db = db
         self.main_window = None
