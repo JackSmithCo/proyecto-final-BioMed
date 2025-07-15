@@ -82,7 +82,7 @@ class DatabaseManager:          # Clase principal para gestionar la conexión y 
         except sqlite3.IntegrityError:
             return False
     
-    def login_user(self, username, password):
+    def login_user(self, username, password):                                                        #Permite autenticar usuario
         hashed = hashlib.sha256(password.encode()).hexdigest()
         cursor = self.conn.cursor()
         cursor.execute('SELECT id, user_type FROM users WHERE username=? AND password=?', 
